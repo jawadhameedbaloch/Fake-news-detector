@@ -1,27 +1,35 @@
-
 import streamlit as st
-import pandas as pd
-import pickle
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-
-# Load saved model & vectorizer
 import joblib
+
+# Load model and vectorizer
 model = joblib.load("model_compressed.pkl")
 vectorizer = joblib.load("vectorizer.pkl")
 
-st.title("Fake News Detector")
-st.write("Paste a news article below:")
+st.set_page_config(page_title="Fake News Detector", page_icon="📰")
 
-user_input = st.text_area("News Article")
+st.title("📰 Fake News Detector")
+st.write("Enter a news headline or article below to check if it is **Real** or **Fake**.")
 
-if st.button("Predict"):
+# Input box
+user_input = st.text_area("Paste news text here:")
+
+if st.button("Check"):
     if user_input.strip() == "":
-        st.warning("Please enter a news article.")
+        st.warning("⚠️ Please enter some text before checking.")
     else:
-        clean_text = " ".join([w for w in user_input.lower().split() if len(w) > 2])
-        vect = vectorizer.transform([clean_text])
-        pred = model.predict(vect)[0]
-        prob = model.predict_proba(vect).max()
-        st.success(f"Prediction: {pred.upper()}")
-        st.info(f"Confidence: {prob:.2f}")
+        # Transform input
+        input_vec = vectorizer.transform([user_input])
+        
+        # Make prediction
+        prediction = model.predict(input_vec)[0]
+
+        # Some models output 0/1, others output "FAKE"/"REAL"
+        # Normalize prediction
+        if prediction in [0, "FAKE", "Fake", "fake"]:
+            label = "Fake"
+            color = "red"
+        else:
+            label = "Real"
+            color = "green"
+
+        st.markdown(f"### ✅ Prediction: <span style='color:{color}'>{label}</span>", unsafe_allow_html=True)
