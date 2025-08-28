@@ -7,7 +7,7 @@ from sklearn.linear_model import LogisticRegression
 
 # Load saved model & vectorizer
 import joblib
-model = joblib.load("model.pkl")
+model = joblib.load("model_compressed.pkl")
 vectorizer = joblib.load("vectorizer.pkl")
 
 st.title("Fake News Detector")
