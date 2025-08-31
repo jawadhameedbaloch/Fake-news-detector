@@ -5,7 +5,7 @@ import joblib
 model = joblib.load("model_compressed.pkl")
 vectorizer = joblib.load("vectorizer.pkl")
 
-st.title("📰 Fake News Detector")
+st.title("Fake News Detector")
 st.write("Enter a news headline or article text below, and the model will predict if it is **FAKE** or **REAL**.")
 
 # Input box
